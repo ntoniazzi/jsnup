@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "noImplicitAny": true,
+        "module": "esnext",
+        "target": "esnext",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node"
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue"
+    ]
+}

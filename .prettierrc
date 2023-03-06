@@ -1,0 +1,20 @@
+{
+    "printWidth": 80,
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": false,
+    "quoteProps": "as-needed",
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "vueIndentScriptAndStyle": true,
+    "endOfLine": "lf",
+    "htmlWhitespaceSensitivity": "css",
+
+    "order": "smacss",
+    "keepOverrides": false,
+
+    "twigPrintWidth": 120,
+    "twigAlwaysBreakObjects": false
+}

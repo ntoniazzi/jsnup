@@ -1,0 +1,21 @@
+{
+  "name": "jsnup",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@neutralinojs/lib": "^3.8.2",
+    "@neutralinojs/neu": "^9.4.0",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "esbuild": "^0.17.11",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^3.4.120",
+    "sass": "^1.58.3",
+    "vite": "^4.1.4",
+    "vue": "^3.2.47"
+  },
+  "scripts": {
+    "build": "esbuild --outfile=resources/js/main.js --bundle app.ts"
+  }
+}
