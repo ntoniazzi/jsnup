@@ -16,6 +16,6 @@
     "vue": "^3.2.47"
   },
   "scripts": {
-    "build": "esbuild --outfile=resources/js/main.js --bundle app.ts"
+    "build": "vite build"
   }
 }
