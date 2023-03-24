@@ -3,14 +3,14 @@
 import { PageSizes, PDFDocument } from "pdf-lib";
 import type {PDFDocumentProxy} from "pdfjs-dist";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
-// import { app, filesystem, events, os } from "@neutralinojs/lib";
+import { app, filesystem, events, os } from "@neutralinojs/lib";
 import "./styles.scss";
 import { ref, shallowRef } from 'vue';
 import { computed, reactive } from "@vue/reactivity";
 import { formatNumber, formatSize, fitRectangle } from './utils';
 import SpinButton from "./SpinButton.vue";
 
-const { filesystem, os } = Neutralino;
+// const { filesystem, os } = Neutralino;
 
 const NL_PATH_SEP = ('string' === typeof NL_OS && NL_OS === "Windows") ? "\\" : "/";
 const isNeutralino = ("undefined" !== typeof NL_MODE) && "window" === NL_MODE;

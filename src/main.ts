@@ -1,6 +1,6 @@
-// import Neutralino from "@neutralinojs/lib"
+import Neutralino from "@neutralinojs/lib"
 
-declare const Neutralino: any;
+// declare const Neutralino: any;
 
 function onWindowClose() {
     Neutralino.app.exit();
