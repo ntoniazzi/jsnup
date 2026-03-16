@@ -3,19 +3,14 @@
 import { PageSizes, PDFDocument } from "pdf-lib";
 import type {PDFDocumentProxy} from "pdfjs-dist";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
-import { app, filesystem, events, os } from "@neutralinojs/lib";
 import "./styles.scss";
 import { ref, shallowRef } from 'vue';
 import { computed, reactive } from "@vue/reactivity";
 import { formatNumber, formatSize, fitRectangle } from './utils';
 import SpinButton from "./SpinButton.vue";
 
-// const { filesystem, os } = Neutralino;
-
-const NL_PATH_SEP = ('string' === typeof NL_OS && NL_OS === "Windows") ? "\\" : "/";
-const isNeutralino = ("undefined" !== typeof NL_MODE) && "window" === NL_MODE;
 const workerUrl = new URL(
-    "/node_modules/pdfjs-dist/build/pdf.worker.js",
+    "/node_modules/pdfjs-dist/build/pdf.worker.mjs",
     import.meta.url
 );
 
@@ -60,16 +55,6 @@ const url = ref<string>(null);
 let pdfjs: PDFDocumentProxy = null;
 const buildCanvas = document.createElement("canvas");
 const buildCtx = buildCanvas.getContext("2d");
-
-let lastDir = os.getPath("documents") + NL_PATH_SEP;
-
-// const types = [
-//     { label: "1×1", rows: 1, columns: 1, w: '100%' },
-//     { label: "1×2", rows: 1, columns: 2, w: '50%'  },
-//     { label: "2×1", rows: 2, columns: 1, w: '50.1%'  },
-//     { label: "2×2", rows: 2, columns: 2, w: '50%'  },
-// ];
-
 const thumbSize = 256;
 
 function onOpenDocs() {
@@ -77,12 +62,6 @@ function onOpenDocs() {
     thumbs.value = [];
     pdf.value = null;
     pageNumber.value = 0;
-
-    if (isNeutralino) {
-        nlOpenDocs();
-
-        return;
-    }
 
     input.value.click();
 }
@@ -160,6 +139,7 @@ function createPreview(thumb: Thumb): Promise<void> {
 
             return page.render({
                 canvasContext: thumb.context,
+                canvas: thumb.canvas,
                 viewport: viewport.clone({scale})
             }).promise;
         })
@@ -170,53 +150,6 @@ function createPreview(thumb: Thumb): Promise<void> {
     });
 
     return promise;
-}
-
-// watch(pageNumber, () => {
-    // updatePreview();
-// });
-
-async function nlOpenDocs() {
-    let filenames: string[] = [];
-    try {
-        filenames = await os.showOpenDialog(
-            "Sélectionnez un fichierPDF",
-            {
-                filters: [
-                    {name: "PDF", extensions: ['pdf']},
-                    {name: 'All files', extensions: ['*']}
-                ],
-                defaultPath: lastDir,
-            }
-        );
-    } catch(reason) {
-        console.log(reason);
-
-        return;
-        // app.exit(1);
-    }
-
-    console.log("Filename", filenames);
-
-    if (filenames.length === 0) {
-        console.log("nothing to do");
-
-        return;
-    }
-
-    const pos = filenames[0].lastIndexOf(NL_PATH_SEP);
-    lastDir = filenames[0].substring(0, pos + 1);
-
-    console.log("Read file " + filenames[0] + ", last dir " + lastDir);
-
-    const bytes = await filesystem.readBinaryFile(filenames[0]) as ArrayBuffer;
-
-    file.value = {
-        name: filenames[0].substring(pos + 1),
-        size: bytes.byteLength,
-    };
-
-    bytesLoaded(bytes);
 }
 
 async function processPDF() {
@@ -299,34 +232,6 @@ async function processPDF() {
 
 async function processAndSave() {
     const pdfBytes = await processPDF();
-
-    if (isNeutralino) {
-        let outfile;
-        try {
-            outfile = await os.showSaveDialog(
-                "Enregistrer le fichier sous…",
-                {
-                    filters: [
-                    {name: "PDF", "extensions": ['pdf']},
-                    {name: 'Tous les fichiers', extensions: ['*']}
-                    ],
-                    defaultPath: lastDir,
-                }
-            );
-        } catch (reason) {
-            console.error("cannot select file", reason);
-        }
-
-        try {
-            await filesystem.writeBinaryFile(outfile, pdfBytes);
-        } catch (reason) {
-            console.error("cannot write file", reason);
-        }
-
-        os.open("file://" + outfile);
-
-        return;
-    }
 
     let blob = new Blob([pdfBytes], { type: 'application/pdf' });
     if (null !== url.value) {
